@@ -86,7 +86,7 @@ class Listnr(Leap.Listener):
 
     def on_init(self, controller):
         import subprocess, re
-        from time import sleep
+        from time import sleep, clock
 # Get screen resolution
         displ=display.Display()
         s=displ.screen()
@@ -106,10 +106,10 @@ class Listnr(Leap.Listener):
             f.close()
 # Create frame buffer
         print 'Initializing Leap Motion...'
-        itry=0
+        time0=clock()
         while (not controller.frame(2*Listnr.nframes).is_valid):
-            itry+=1
-            if itry == 1e5:
+            if clock()-time0 > 5:
+                print "Timeout waiting for valid frames from the Leap Motion."
                 print "Something's not right. Make sure the Leap Motion is connected"
                 print 'and the leapd daemon is running'
                 sys.exit(1)
